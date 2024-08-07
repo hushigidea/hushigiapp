@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { View, Image, StyleSheet, Platform, Button } from 'react-native';
 import { Appbar, Card, Title, Paragraph, Searchbar, Text } from 'react-native-paper';
 
-import { HelloWave } from '@/components/HelloWave';
-
 import x from './data.json';
 
 function getRandomFields(data, fieldType, n) {
@@ -42,7 +40,6 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Appbar.Header>
-        <HelloWave/>
         <Appbar.Content onPress={handlePress} title="クリックして不思議な会話を始めよう！" style={styles.appbarContent} />
       </Appbar.Header>
       {showCard && (
