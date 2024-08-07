@@ -75,18 +75,12 @@ export default function Index() {
 
   const renderItem = ({ item }) => (
     <>
-    <List.Item
-      title={item.name}
-      description={`This is a description for ${item.name}`}
-    />
-    <Divider />
-  </>
-    // <Card style={styles.card}>
-    //   <Card.Content>
-    //     <Title>{item.name}</Title>
-    //     <Paragraph>This is a description for {item.name}</Paragraph>
-    //   </Card.Content>
-    // </Card>
+      <List.Item
+        title={item.name}
+        description={`This is a description for ${item.name}`}
+      />
+      <Divider />
+    </>
   );
 
   return (
