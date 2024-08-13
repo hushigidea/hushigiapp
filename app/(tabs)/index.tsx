@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, Platform, Button } from 'react-native';
-import { Appbar, Card, Title, Paragraph, Searchbar, Text } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { useTheme, PaperProvider, Appbar, Card, Title, Paragraph, Text } from 'react-native-paper';
+import { ThemedView } from '@/components/ThemedView';
 
 import x from './data.json';
 
@@ -25,6 +26,7 @@ function getRandomFields(data, fieldType, n) {
 }
 
 export default function HomeScreen() {
+  const theme = useTheme(); // 获取当前主题
   const [showCard, setShowCard] = useState(false);
   const [topic, setTopic] = useState([]);
   const [style, setStyle] = useState([]);
@@ -38,39 +40,37 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.Content onPress={handlePress} title="クリックして不思議な会話を始めよう！" style={styles.appbarContent} />
-      </Appbar.Header>
-      {showCard && (
-        <Card style={styles.card}>
-          <Card.Content>
-            <Title>今日の会話練習</Title>
-            <Paragraph>
-              <Text variant="labelLarge">{"Topic:\n"}</Text>
-              <Text variant="labelMedium">{topic}</Text>
-              <Text variant="labelLarge">{"\n\nStyle:\n"}</Text>
-              <Text variant="labelMedium">{style}</Text>
-              <Text variant="labelLarge">{"\n\nGrammar Points:\n"}</Text>
-              {grammars.map((item, index) => (
-                <Text key={index} variant="labelMedium">{item}{index < grammars.length - 1 ? '\n' : ''}</Text>
-              ))} 
-            </Paragraph>
-          </Card.Content>
-        </Card>
-       )}
-    </View>
+    <PaperProvider>
+      <ThemedView style={{height: '100%'}}>
+        <Appbar.Header mode='small'>
+          <Appbar.Content titleStyle={styles.appbarContent} onPress={handlePress} title='クリックして不思議な会話を始めよう！' />
+        </Appbar.Header>
+        {showCard && (
+          <Card style={styles.card}>
+            <Card.Content>
+              <Title>今日の会話練習</Title>
+              <Paragraph>
+                <Text variant="labelLarge">{"Topic:\n"}</Text>
+                <Text variant="labelMedium">{topic}</Text>
+                <Text variant="labelLarge">{"\n\nStyle:\n"}</Text>
+                <Text variant="labelMedium">{style}</Text>
+                <Text variant="labelLarge">{"\n\nGrammar Points:\n"}</Text>
+                {grammars.map((item, index) => (
+                  <Text key={index} variant="labelMedium">{item}{index < grammars.length - 1 ? '\n' : ''}</Text>
+                ))} 
+              </Paragraph>
+            </Card.Content>
+          </Card>
+        )}
+      </ThemedView>
+    </PaperProvider>
   );
-
 }
 
 const styles = StyleSheet.create({
   appbarContent: {
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    textAlign: 'center',
+    fontSize: 15,
   },
   loading: {
     padding: 10,

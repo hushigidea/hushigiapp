@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import { Appbar, Card, Title, Paragraph, Searchbar, List, Divider } from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
+import {  useTheme, PaperProvider, Appbar, Card, Title, Paragraph, Searchbar, List, Divider, ActivityIndicator } from 'react-native-paper';
 import { FlashList } from '@shopify/flash-list';
+import { ThemedView } from "@/components/ThemedView";
+
 
 import bunnpou from './data.json';
 
 const PAGESIZE = 20;
 
 export default function Index() {
+  const theme = useTheme(); // 获取当前主题
   const [allData, setAllData] = useState(bunnpou.grammar || []);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -16,6 +19,9 @@ export default function Index() {
   const [totalPage, setTotalPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true); // 新增初始加载状态
+  const bgColor = {
+    backgroundColor: theme.colors.background,
+  }
 
   useEffect(() => {
     const totalNum = allData.length;
@@ -67,8 +73,8 @@ export default function Index() {
 
   const renderFooter = () => (
     loading ? (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" />
+      <View style={[styles.loading]}>
+        <ActivityIndicator size='small' />
       </View>
     ) : null
   );
@@ -84,36 +90,37 @@ export default function Index() {
   );
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.Content title="文法の一覧" />
-      </Appbar.Header>
-      <Searchbar
-        placeholder="お文法を検索"
-        onChangeText={handleSearch}
-        value={searchQuery}
-        style={styles.searchbar}
-      />
-      <FlashList
-        data={filteredData}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        onEndReached={() => {
-          if (!isInitialLoad) loadMoreData();
-        }}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-        estimatedItemSize={100}
-        onLayout={() => setIsInitialLoad(false)} // 初始布局完成后设置为false
-      />
-    </View>
+    <PaperProvider>
+      <ThemedView style={{height: '100%'}}>
+        <Appbar.Header>
+            <Appbar.Content title="文法の一覧" />
+        </Appbar.Header>
+        <Searchbar
+            placeholder="お文法を検索"
+            onChangeText={handleSearch}
+            value={searchQuery}
+            style={styles.searchbar}
+        />
+        <FlashList
+            data={filteredData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReached={() => {
+              if (!isInitialLoad) loadMoreData();
+            }}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={renderFooter}
+            estimatedItemSize={100}
+            onLayout={() => setIsInitialLoad(false)} // 初始布局完成后设置为false
+        />
+      </ThemedView>
+    </PaperProvider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   loading: {
     padding: 10,

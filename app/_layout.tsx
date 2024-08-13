@@ -1,55 +1,50 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme, ThemeProvider } from '@react-navigation/native';
+import { PaperProvider, MD2LightTheme as PaperDefaultTheme, MD2DarkTheme as PaperDarkTheme } from 'react-native-paper';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import 'react-native-reanimated';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function TabLayout() {
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const paperTheme = colorScheme === 'dark' ? PaperDarkTheme : PaperDefaultTheme;
+  const [loaded] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  });
+
+  const navigationTheme = {
+    ...NavigationDefaultTheme,
+    colors: {
+      ...NavigationDefaultTheme.colors,
+      ...paperTheme.colors
+    },
+  };
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
+
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: '会話練習',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'chatbubbles' : 'chatbubbles-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="bunnpou"
-        options={{
-          title: '文法',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'extension-puzzle' : 'extension-puzzle-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="choukai"
-        options={{
-          title: '聴解',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'headset' : 'headset-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="secchi"
-        options={{
-          title: '設置',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'settings' : 'settings-outline'} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
+    <PaperProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? NavigationDarkTheme : NavigationDefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </ThemeProvider>
+    </PaperProvider>
   );
 }
