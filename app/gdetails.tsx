@@ -4,10 +4,9 @@ import { useLocalSearchParams } from 'expo-router';
 import { View, StyleSheet, Text } from 'react-native';
 import {  Chip, useTheme, PaperProvider, Appbar, Card, Title, Paragraph, Searchbar, List, Divider, ActivityIndicator } from 'react-native-paper';
 import { find } from 'lodash';
+import { data as bunnpou } from 'hushigi-grammar';
 
 import { ThemedView } from '@/components/ThemedView';
-
-import bunnpou from './data.json';
 
 export default function Details() {
   const { gid } = useLocalSearchParams();
