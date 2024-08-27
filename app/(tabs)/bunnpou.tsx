@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
 import {  useTheme, PaperProvider, Appbar, Card, Title, Paragraph, Searchbar, List, Divider, ActivityIndicator } from 'react-native-paper';
 import { FlashList } from '@shopify/flash-list';
 import { ThemedView } from "@/components/ThemedView";
 
 
-import bunnpou from './data.json';
+import { data as bunnpou } from 'hushigi-grammar';
 
 const PAGESIZE = 20;
 
@@ -81,13 +82,23 @@ export default function Index() {
 
   const renderItem = ({ item }) => (
     <>
-      <List.Item
-        title={item.name}
-        description={`This is a description for ${item.name}`}
-      />
-      <Divider />
+      <Link
+        href={{
+          pathname: '/gdetails',
+          params: {
+            gid: item.gid,
+          },
+        }}
+      >
+        <List.Item
+          title={item.name}
+          description={item.notes}
+        />
+        <Divider />
+      </Link>
     </>
   );
+
 
   return (
     <PaperProvider>

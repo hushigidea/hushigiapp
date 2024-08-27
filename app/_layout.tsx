@@ -1,7 +1,8 @@
 import { DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme, ThemeProvider } from '@react-navigation/native';
-import { PaperProvider, MD2LightTheme as PaperDefaultTheme, MD2DarkTheme as PaperDarkTheme } from 'react-native-paper';
+import { PaperProvider, MD2LightTheme as PaperDefaultTheme, MD2DarkTheme as PaperDarkTheme, useTheme } from 'react-native-paper';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -12,6 +13,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const theme = useTheme();
   const colorScheme = useColorScheme();
   const paperTheme = colorScheme === 'dark' ? PaperDarkTheme : PaperDefaultTheme;
   const [loaded] = useFonts({
@@ -39,10 +41,29 @@ export default function RootLayout() {
 
   return (
     <PaperProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? NavigationDarkTheme : NavigationDefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
+      <ThemeProvider value={navigationTheme}>
+        <Stack screenOptions={{
+          headerStyle: {
+            backgroundColor: navigationTheme.colors.background,
+          },
+          headerTintColor: navigationTheme.colors.onSurface,
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}>
+          <Stack.Screen name='(tabs)'
+            options={{
+              headerShown: false,
+              title: 'ホム'
+            }}
+          />
+          <Stack.Screen
+            name="gdetails"
+            options={{
+              title: '文法情報', // 设置 gdetails 页面显示的标题
+            }}
+          />
+          <Stack.Screen name='+not-found' />
         </Stack>
       </ThemeProvider>
     </PaperProvider>
