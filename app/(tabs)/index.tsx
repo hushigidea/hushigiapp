@@ -124,7 +124,7 @@ export default function HomeScreen() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       checkForUpdates(); // 定期检查资源的最近修改时间
-    }, 6000); // 每分钟检查一次
+    }, 60000); // 每分钟检查一次
 
     return () => clearInterval(intervalId); // 组件卸载时清除定时器
   }, [lastModified]);
